@@ -107,7 +107,7 @@ def create_messagehub_producer(username, password, kafka_brokers_sasl = [], sasl
                              
     return producer
 
-def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl_mechanism = 'PLAIN', security_protocol = 'SASL_SSL', value_deserializer=lambda v: json.loads(v).encode('utf-8')):
+def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl_mechanism = 'PLAIN', security_protocol = 'SASL_SSL', value_deserializer=lambda v: json.loads(v)):
     import ssl
     from kafka import KafkaConsumer 
     from kafka.errors import KafkaError 
