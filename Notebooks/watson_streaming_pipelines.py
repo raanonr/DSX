@@ -107,7 +107,7 @@ def create_messagehub_producer(username, password, kafka_brokers_sasl = [], sasl
                              
     return producer
 
-def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl_mechanism = 'PLAIN', security_protocol = 'SASL_SSL', value_deserializer=lambda v: json.loads(v)):
+def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl_mechanism = 'PLAIN', security_protocol = 'SASL_SSL', value_deserializer=lambda v: json.loads(v).encode('utf-8')):
     import ssl
     from kafka import KafkaConsumer 
     from kafka.errors import KafkaError 
@@ -133,5 +133,33 @@ def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl
                              ssl_context = context,
                              sasl_mechanism = sasl_mechanism,
                              value_deserializer=value_deserializer)
+                             
+    return consumer
+
+def create_messagehub_consumer(username, password, kafka_brokers_sasl = [], sasl_mechanism = 'PLAIN', security_protocol = 'SASL_SSL'): 
+    import ssl
+    from kafka import KafkaConsumer 
+    from kafka.errors import KafkaError 
+
+    if (kafka_brokers_sasl == []):
+        kafka_brokers_sasl = [
+            "kafka01-prod01.messagehub.services.us-south.bluemix.net:9093",
+            "kafka02-prod01.messagehub.services.us-south.bluemix.net:9093",
+            "kafka03-prod01.messagehub.services.us-south.bluemix.net:9093",
+            "kafka04-prod01.messagehub.services.us-south.bluemix.net:9093",
+            "kafka05-prod01.messagehub.services.us-south.bluemix.net:9093" 
+        ] 
+
+    # Create a new context using system defaults, disable all but TLS1.2
+    context = ssl.create_default_context()
+    context.options &= ssl.OP_NO_TLSv1
+    context.options &= ssl.OP_NO_TLSv1_1
+
+    consumer = KafkaConsumer(bootstrap_servers = kafka_brokers_sasl,
+                             sasl_plain_username = username,
+                             sasl_plain_password = password,
+                             security_protocol = security_protocol,
+                             ssl_context = context,
+                             sasl_mechanism = sasl_mechanism)
                              
     return consumer
