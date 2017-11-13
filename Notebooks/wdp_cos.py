@@ -11,19 +11,13 @@ from pprint import pprint
 
 #credentials = json.loads('{"apikey": "2SozF9MkHGQULJZHZTiZOnidaLSc3zIqr3SkDUC0YD0t", "endpoints": "https://cos-service.bluemix.net/endpoints", "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/db0d062d2b4c0836e18618a5222d8068:22e3b946-6154-4032-8e8f-7cfb0b429602::"}')
 
-# Request detailed enpoint list
-def getEndpoints( cos_service_url="cos-service.bluemix.net"):
-# Why make this a separate method
+def get_cos( api_key, service_instance_id, cos_service_url="cos-service.bluemix.net"):
 
+    # Request detailed enpoint list
     endpoints_url="https://" + cos_service_url + "/endpoints"
     endpoints = requests.get(endpoints_url).json()
     #print(json.dumps(endpoints, indent=2))
     #import pdb; pdb.set_trace()
-    endpoints
-
-def get_cos( api_key, service_instance_id, cos_service_url="cos-service.bluemix.net"):
-
-    endpoints = getEndpoints( cos_service_url)
 
     # Obtain iam and cos host from the the detailed endpoints
     iam_host = (endpoints['identity-endpoints']['iam-token'])
