@@ -9,7 +9,7 @@ import random
 from botocore.client import Config
 from pprint import pprint
 
-credentials = json.loads('{"apikey": "2SozF9MkHGQULJZHZTiZOnidaLSc3zIqr3SkDUC0YD0t", "endpoints": "https://cos-service.bluemix.net/endpoints", "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/db0d062d2b4c0836e18618a5222d8068:22e3b946-6154-4032-8e8f-7cfb0b429602::"}')
+#credentials = json.loads('{"apikey": "2SozF9MkHGQULJZHZTiZOnidaLSc3zIqr3SkDUC0YD0t", "endpoints": "https://cos-service.bluemix.net/endpoints", "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/db0d062d2b4c0836e18618a5222d8068:22e3b946-6154-4032-8e8f-7cfb0b429602::"}')
 
 # Request detailed enpoint list
 def getEndpoints( cos_service_url="cos-service.bluemix.net"):
@@ -43,7 +43,7 @@ def get_cos( api_key, service_instance_id, cos_service_url="cos-service.bluemix.
     cos
 
 # Call S3 to list current buckets
-def get_buckets( cos) {
+def get_buckets( cos):
 
     response = cos.list_buckets()
 
@@ -51,7 +51,7 @@ def get_buckets( cos) {
     buckets = [bucket['Name'] for bucket in response['Buckets']]
     buckets
 
-def list_buckets( cos) {
+def list_buckets( cos):
 
     buckets = get_buckets(cos)
 
