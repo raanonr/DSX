@@ -1,5 +1,6 @@
 #https://console.bluemix.net/docs/services/cloud-object-storage/libraries/python.html#python
-pip install ibm-cos-sdk
+# Prerequisite ::::::::
+# pip install ibm-cos-sdk
 
 import boto3
 import json
