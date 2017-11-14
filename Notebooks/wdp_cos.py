@@ -34,7 +34,7 @@ def get_cos( api_key, service_instance_id, cos_service_url="cos-service.bluemix.
                     ibm_auth_endpoint=auth_endpoint,
                     config=Config(signature_version='oauth'),
                     endpoint_url=service_endpoint)
-    cos
+    return cos
 
 # Call S3 to list current buckets
 def get_buckets( cos):
@@ -43,7 +43,8 @@ def get_buckets( cos):
 
     # Get a list of all bucket names from the response
     buckets = [bucket['Name'] for bucket in response['Buckets']]
-    buckets
+
+    return buckets
 
 def list_buckets( cos):
 
@@ -60,7 +61,8 @@ def get_objects( cos, bucket_name):
 
     # Get a list of all object names from the response
     objects = [object['Key'] for object in response['Contents']]
-    objects
+
+    return objects
 
 def list_objects( cos, bucket_name):
 
