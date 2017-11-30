@@ -23,14 +23,27 @@ def deserializeObject(pickledObj):
 
 # Raanon
 def pickleSerializer( data, zip=False):
-    pickledData = serializeObject( data)
-    return pickledData if not zip else gzip.compress( pickledData)
+    pickledData = None
+    try:
+        if data:
+            pickledData = serializeObject( data)
+            if zip:
+                pickledData = gzip.compress( pickledData)
+    except Exception as e:
+        wstpLogger.error( str(e))
+    return pickledData
 
 # Raanon
 def deserializePickle( pickledObj):
-    return deserializeObject( 
-                pickledObj if not pickledObj.startswith(b"\x1f\x8b\x08"): # Magic signature for gzip
-                           else gzip.decompress( pickledObj))
+    depickledObj = None
+    try:
+        if pickledObj:
+            if pickledObj.startswith(b"\x1f\x8b\x08"): # Magic signature for gzip
+                pickledObj = gzip.decompress( pickledObj)
+            depickledObj = deserializeObject( pickledObj)
+    except Exception as e:
+        wstpLogger.error( str(e))
+    return depickledObj
 
 def serializeKerasModel(model):
     with NamedTemporaryFile() as f:
@@ -133,25 +146,42 @@ def get_from_cloud_object_storage(api_key, full_object_path, auth_endpoint="http
 # Raanon
 def get_from_cos( credentials, full_object_path, serializer):
 
-    serializedObj = get_from_cloud_object_storage(
-        api_key          = credentials['api_key'],
-        full_object_path = full_object_path,
-        auth_endpoint    = credentials['iam_url'],
-        service_endpoint = credentials['endpoint']
-    )
-    return serializedObj if not serializer
-                         else serializer( serializedObj)
+    serializedObj = None
+    deserializedObj = None
+    try:
+        wstpLogger.warning( full_object_path)
+        serializedObj = get_from_cloud_object_storage(
+            api_key          = credentials['api_key'],
+            full_object_path = full_object_path,
+            auth_endpoint    = credentials['iam_url'],
+            service_endpoint = credentials['endpoint']
+        )
+        deserializedObj = serializer( serializedObj) if serializer else serializedObj
+        #wstpLogger.warning( deserializedObj)
+    except Exception as e:
+        wstpLogger.error( str(e))
+
+    wstpLogger.warning( "Retrieved (" + str(len(serializedObj if serializedObj else "")) + 
+                   "). Deserialized (" + str(len(str(deserializedObj) if deserializedObj else "")) + ")")
+
+    return deserializedObj
 
 # Raanon
 def put_to_cos( credentials, full_object_path, serializedData):
 
-    response = put_to_cloud_object_storage(
-	api_key          = credentials['api_key'],
-	full_object_path = full_object_path,
-	my_data          = serializedData,
-	auth_endpoint    = credentials['iam_url'],
-	service_endpoint = credentials['endpoint']
-    )
+    wstpLogger.warning( full_object_path + " (" + str(len(serializedData if serializedData else "")) + ")")
+    try:
+        if serializedData:
+            response = put_to_cloud_object_storage(
+                api_key          = credentials['api_key'],
+                full_object_path = full_object_path,
+                my_data          = serializedData,
+                auth_endpoint    = credentials['iam_url'],
+                service_endpoint = credentials['endpoint']
+            )
+            wstpLogger.warning( response)
+    except Exception as e:
+        wstpLogger.error( str(e))
 
 # Raanon
 def setStopWordList():
