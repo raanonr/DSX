@@ -29,7 +29,7 @@ def pickleSerializer( data, zip=False):
 # Raanon
 def deserializePickle( pickledObj):
     return deserializeObject( 
-                pickledObj if not pickledObj.startswith(b"\x1f\x8b\x08"): # Magic signature for gzip
+                pickledObj if not pickledObj.startswith(b"\x1f\x8b\x08") # Magic signature for gzip
                            else gzip.decompress( pickledObj))
 
 def serializeKerasModel(model):
