@@ -38,7 +38,7 @@ def deserializePickle( pickledObj):
     depickledObj = None
     try:
         if pickledObj:
-            if pickledObj.startswith(b"\x1f\x8b\x08"): # Magic signature for gzip
+            if pickledObj.startswith(b"\x1f\x8b\x08") # Magic signature for gzip
                 pickledObj = gzip.decompress( pickledObj)
             depickledObj = deserializeObject( pickledObj)
     except Exception as e:

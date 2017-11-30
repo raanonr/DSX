@@ -133,17 +133,21 @@ def get_from_cloud_object_storage(api_key, full_object_path, auth_endpoint="http
 # Raanon
 def get_from_cos( credentials, full_object_path, serializer):
 
+    wstpLogger.warning( full_object_path)
     serializedObj = get_from_cloud_object_storage(
         api_key          = credentials['api_key'],
         full_object_path = full_object_path,
         auth_endpoint    = credentials['iam_url'],
         service_endpoint = credentials['endpoint']
     )
+    wstpLogger.warning( "Retrieved (" + str(len(serializedObj if serializedObj else "")) + 
+                   "). Serializer (" + "True" if serializer else "False" + ")")
     return serializedObj if not serializer else serializer( serializedObj)
 
 # Raanon
 def put_to_cos( credentials, full_object_path, serializedData):
 
+    wstpLogger.warning( full_object_path + " (" + str(len(serializedData if serializedData else "")) + ")")
     response = put_to_cloud_object_storage(
 	api_key          = credentials['api_key'],
 	full_object_path = full_object_path,
@@ -151,6 +155,7 @@ def put_to_cos( credentials, full_object_path, serializedData):
 	auth_endpoint    = credentials['iam_url'],
 	service_endpoint = credentials['endpoint']
     )
+    wstpLogger.warning( response if response else "ERROR: NO RESPONSE")
 
 # Raanon
 def setStopWordList():
