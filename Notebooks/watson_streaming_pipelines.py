@@ -33,7 +33,7 @@ def deserializePickle( pickledObj):
     # Check for magic signature of gzip
     if pickledObj and pickledObj.startswith(b"\x1f\x8b\x08"):
         pickledObj = gzip.decompress( pickledObj)
-    return deserializeObject( pickledObj)
+    return deserializeObject( pickledObj) if pickledObj else None
 
 def serializeKerasModel(model):
     with NamedTemporaryFile() as f:
@@ -145,7 +145,7 @@ def get_from_cos( credentials, full_object_path, serializer):
     )
     wstpLogger.warning( "Retrieved (" + str(len(serializedObj if serializedObj else "")) + 
                    "). Serializer (" + "True" if serializer else "False" + ")")
-    return serializedObj if not serializer else serializer( serializedObj)
+    return serializer( serializedObj) if serializedObj and serializer else serializedObj
 
 # Raanon
 def put_to_cos( credentials, full_object_path, serializedData):
