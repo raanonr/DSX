@@ -139,8 +139,7 @@ def get_from_cos( credentials, full_object_path, serializer):
         auth_endpoint    = credentials['iam_url'],
         service_endpoint = credentials['endpoint']
     )
-    return serializedObj if not serializer
-                         else serializer( serializedObj)
+    return serializedObj if not serializer else serializer( serializedObj)
 
 # Raanon
 def put_to_cos( credentials, full_object_path, serializedData):
