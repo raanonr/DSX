@@ -24,13 +24,16 @@ def deserializeObject(pickledObj):
 # Raanon
 def pickleSerializer( data, zip=False):
     pickledData = serializeObject( data)
-    return pickledData if not zip else gzip.compress( pickledData)
+    if pickledData and zip:
+        pickledData = gzip.compress( pickledData)
+    return pickledData
 
 # Raanon
 def deserializePickle( pickledObj):
-    return deserializeObject( 
-                pickledObj if not pickledObj.startswith(b"\x1f\x8b\x08") # Magic signature for gzip
-                           else gzip.decompress( pickledObj))
+    # Check for magic signature of gzip
+    if pickledObj and pickledObj.startswith(b"\x1f\x8b\x08"):
+        pickledObj = gzip.decompress( pickledObj)
+    return deserializeObject( pickledObj)
 
 def serializeKerasModel(model):
     with NamedTemporaryFile() as f:
@@ -155,7 +158,7 @@ def put_to_cos( credentials, full_object_path, serializedData):
 	auth_endpoint    = credentials['iam_url'],
 	service_endpoint = credentials['endpoint']
     )
-    wstpLogger.warning( response if response else "ERROR: NO RESPONSE")
+    wstpLogger.warning( "Response = " + str(response))
 
 # Raanon
 def setStopWordList():
@@ -168,7 +171,7 @@ def setStopWordList():
     except:
         stoplist = {}
 
-    if len(stoplist) == 0: # Default, just in case
+    if stoplist == {}: # Use a default, just in case
         stoplist = {'because', 'during', 'was', 'itself', 'should', 'by', 'haven', 'yourself', 'been', 're', 'ain', 'hadn', 'had', 'again', 'what', 'they', 'themselves', 'whom', 'you', 'all', 'both', 'on', 'isn', 'his', 'ourselves', 'that', 't', 'm', 'is', 'this', 'how', 'when', 'will', 'against', 'her', 'with', 'couldn', 'being', 'hasn', 'be', 'it', 'but', 'no', 'than', 'don', 'most', 'now', 'while', 'doesn', 'our', 'from', 'are', 'he', 'so', 'shouldn', 've', 'y', 'as', 'we', 'll', 's', 'himself', 'my', 'about', 'more', 'where', 'down', 'there', 'just', 'nor', 'theirs', 'such', 'who', 'to', 'before', 'him', 'me', 'has', 'o', 'its', 'were', 'did', 'can', 'same', 'then', 'have', 'few', 'aren', 'd', 'other', 'further', 'and', 'off', 'these', 'an', 'wasn', 'hers', 'your', 'weren', 'until', 'only', 'does', 'shan', 'i', 'own', 'not', 'or', 'myself', 'through', 'some', 'didn', 'at', 'out', 'why', 'needn', 'doing', 'above', 'after', 'wouldn', 'yourselves', 'very', 'having', 'herself', 'a', 'the', 'am', 'if', 'into', 'once', 'won', 'too', 'up', 'ours', 'here', 'those', 'each', 'in', 'over', 'ma', 'them', 'under', 'for', 'mustn', 'yours', 'mightn', 'below', 'between', 'which', 'do', 'any', 'she', 'of', 'their'}
 
     return stoplist
