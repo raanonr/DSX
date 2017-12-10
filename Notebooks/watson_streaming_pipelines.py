@@ -134,7 +134,7 @@ def get_from_cloud_object_storage(api_key, full_object_path, auth_endpoint="http
     return response.content
         
 # Raanon
-def get_from_cos( credentials, full_object_path, serializer):
+def get_from_cos( credentials, full_object_path, deserializer):
 
     wstpLogger.warning( full_object_path)
     serializedObj = get_from_cloud_object_storage(
@@ -144,12 +144,12 @@ def get_from_cos( credentials, full_object_path, serializer):
         service_endpoint = credentials['endpoint']
     )
     wstpLogger.warning( "Retrieved (" + str(len(serializedObj if serializedObj != None else "")) + 
-                   "). Serializer (" + ("True" if serializer != None else "False") + ")")
+                   "). Deserializer (" + ("True" if deserializer != None else "False") + ")")
 #b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Resource>/kuku/kuku</Resource><RequestId>a098cc20-fb05-4d9f-b404-368d2f6f062e</RequestId><httpStatusCode>404</httpStatusCode></Error>'
     if b"<Error>" in serializedObj:
         wstpLogger.warning( str(serializedObj))
         serializedObj = None
-    return serializer( serializedObj) if serializedObj != None and serializer != None else serializedObj
+    return deserializer( serializedObj) if serializedObj != None and deserializer != None else serializedObj
 
 # Raanon
 def put_to_cos( credentials, full_object_path, serializedData):
