@@ -180,6 +180,19 @@ def setStopWordList():
 
     return stoplist
 
+# Raanon
+def setLemmatizer():
+
+    lemmatizer = None
+    try:
+        import nltk
+        nltk.download("wordnet")
+        lemmatizer = nltk.stem.WordNetLemmatizer()
+    except:
+        pass
+
+    return lemmatizer
+
 # Make sure to install: ibm-cos-sdk
 # !pip install ibm-cos-sdk
 # https://github.com/IBM/ibm-cos-sdk-python
