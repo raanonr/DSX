@@ -145,7 +145,6 @@ def get_from_cos( credentials, full_object_path, deserializer):
     )
     wstpLogger.warning( "Retrieved (" + str(len(serializedObj if serializedObj != None else "")) + 
                    "). Deserializer (" + ("True" if deserializer != None else "False") + ")")
-#b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Resource>/kuku/kuku</Resource><RequestId>a098cc20-fb05-4d9f-b404-368d2f6f062e</RequestId><httpStatusCode>404</httpStatusCode></Error>'
     if b"<Error>" in serializedObj:
         wstpLogger.warning( str(serializedObj))
         serializedObj = None
