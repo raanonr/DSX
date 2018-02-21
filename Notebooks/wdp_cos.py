@@ -4,6 +4,7 @@
 
 import boto3
 import json
+import datetime
 import requests
 import random
 from botocore.client import Config
@@ -60,7 +61,8 @@ def get_objects( cos, bucket_name):
     response = cos.list_objects(Bucket=bucket_name)
 
     # Get a list of all object names from the response
-    objects = [object['Key'] for object in response['Contents']]
+    #objects = [object['Key'] for object in response['Contents']]
+    objects = [(object['Size'], object['LastModified'].strftime('%Y-%m-%d %H:%M:%S.%f'), object['Key']) for object in response['Contents']]
 
     return objects
 
@@ -70,7 +72,10 @@ def list_objects( cos, bucket_name):
 
     # Print out the object list
     print("Objects in bucket: %s:" % bucket_name)
-    print(json.dumps(objects, indent=2))
+    for obj in objects:
+        print("{:9d} {} {}".format(obj[0],obj[1],obj[2]))
+    #print(json.dumps(objects, indent=2))
+
 
 def list_all_bucket_objects( cos):
 
